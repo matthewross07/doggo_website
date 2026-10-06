@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Adventure Dog Club Booking</title>
-  <meta name="description" content="An unofficial, good-natured demo of what booking drop-in dog training classes could feel like: enter your info once, then book in one tap.">
+  <meta name="description" content="A friendly, unofficial sketch of easier class booking for the Adventure Dog Club: save your details once, then just pick classes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -29,58 +29,175 @@
     </div>
   </header>
 
-  <main id="app" class="wrap" aria-live="polite"></main>
-
-  <section class="wrap explainer" id="how">
-    <h2>How this would work for real</h2>
-    <p class="lede">The building blocks for this have become really approachable. Each piece below is a common off-the-shelf service with a free tier or pay-as-you-go pricing.</p>
-    <div class="stack-grid">
-      <div class="stack-card">
-        <h3>Accounts</h3>
-        <p>Magic-link sign-in (type your email, click the link) via <strong>Supabase</strong> or <strong>Firebase Auth</strong>. Your profile and your dogs are saved once and reused for every booking.</p>
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <div class="kicker">A friendly idea for the Adventure Dog Club</div>
+        <h1>What if booking a class took ten seconds?</h1>
+        <p class="lede">The drop-in membership is a great idea. Booking under it could be just as easy: members save their details once, then simply pick the classes they want. Here's a working sketch, from a member who loves the classes.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-sunset" data-action="as-member">Try it as a member →</button>
+          <a class="btn btn-light" href="#acuity">What Acuity can already do</a>
+        </div>
       </div>
-      <div class="stack-card">
-        <h3>Membership billing</h3>
-        <p><strong>Stripe Billing</strong> runs the $250 or $375 monthly subscription. Stripe Checkout hosts the card form, so card numbers never touch the site, and the Stripe Customer Portal handles upgrades, card changes and cancellations.</p>
-      </div>
-      <div class="stack-card">
-        <h3>Booking</h3>
-        <p>A <code>bookings</code> table with a 6-dog cap per class, enforced in the database. Credits reset on each billing cycle, and a webhook from Stripe keeps membership status in sync.</p>
-      </div>
-      <div class="stack-card">
-        <h3>Hosting</h3>
-        <p>This page is static HTML on <strong>GitHub Pages</strong>, which is free. Confirmation emails and calendar invites go out through a transactional email service such as Resend or Postmark.</p>
-      </div>
-    </div>
-
-    <h3 class="compare-title">Booking a few classes in a month</h3>
-    <div class="compare">
-      <div class="compare-col compare-old">
-        <h4>Booking each class separately</h4>
-        <ol>
-          <li>Find the scheduling link in the email from when you joined</li>
-          <li>Pick a class</li>
-          <li>Enter your name, email, phone and dog's details</li>
-          <li>Find and paste the membership code</li>
-          <li>Confirm</li>
-          <li>Repeat for the next class</li>
-        </ol>
-      </div>
-      <div class="compare-col compare-new">
-        <h4>With a saved profile</h4>
-        <ol>
-          <li>Pick the classes you want</li>
-          <li>Tap <em>Book</em></li>
-        </ol>
-        <p class="compare-note">Your details come along automatically, since you entered them when you joined.</p>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-head"><strong>Juniper’s week</strong><span>2 of 5 used</span></div>
+            <div class="mini on" style="--lv:var(--lv-2)"><span class="t">Tue 6:45</span><span class="n">Life Skills<small>Loose Leash Walking</small></span><span class="ck"></span></div>
+            <div class="mini" style="--lv:var(--lv-1)"><span class="t">Wed 6:00</span><span class="n">Teen Spirit<small>Self-Control</small></span><span class="ck"></span></div>
+            <div class="mini on" style="--lv:var(--lv-e)"><span class="t">Sat 8:00</span><span class="n">Training Treks<small>Out &amp; About</small></span><span class="ck"></span></div>
+            <div class="mini" style="--lv:var(--lv-2)"><span class="t">Sun 10:30</span><span class="n">Life Skills<small>Recalls &amp; Stays</small></span><span class="ck"></span></div>
+            <div class="phone-bar"><span>2 classes · details saved</span><b>Book 2</b></div>
+          </div>
+        </div>
       </div>
     </div>
+    <svg class="hero-mountains" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
+      <path class="m1" d="M0 110 L0 70 L140 30 L260 64 L420 10 L560 60 L700 26 L860 70 L1010 18 L1160 58 L1300 30 L1440 62 L1440 110 Z"/>
+      <path class="m2" d="M0 110 L0 92 L180 58 L330 86 L520 44 L690 84 L880 52 L1060 88 L1230 56 L1440 86 L1440 110 Z"/>
+    </svg>
+  </section>
 
-    <details class="footnote">
-      <summary>A note for the Summit team</summary>
-      <p>This isn't meant as a criticism. Running your own scheduler takes upkeep, and card processing costs about the same either way. The idea is just that a smooth repeat-booking flow is much easier to get today than it used to be. That could come from a client-login or "remember my info" setting in your current tool, from a membership-focused platform, or from a small custom page like this one.</p>
-      <p>Either way, we love the classes. That's why we keep booking them. 🐾</p>
-    </details>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-intro">
+        <div class="eyebrow">The idea</div>
+        <h2>Same membership, fewer steps</h2>
+        <p>Members already pay once a month. Ideally they'd also only introduce themselves once. Here's how booking a handful of classes compares:</p>
+      </div>
+      <div class="flow">
+        <div class="flow-col">
+          <h3>Booking class by class <small>every class</small></h3>
+          <ol class="steps">
+            <li>Find the scheduling link</li>
+            <li>Pick a class and time</li>
+            <li>Enter name, email, phone and dog details</li>
+            <li>Find and enter the membership code</li>
+            <li>Confirm</li>
+            <li class="repeat">Then do it again for the next class</li>
+          </ol>
+        </div>
+        <div class="flow-col new">
+          <h3>With a saved member profile <small>once a month</small></h3>
+          <ol class="steps">
+            <li>Open your member page (already signed in)</li>
+            <li>Tick the classes you want</li>
+            <li><span>Tap <strong>Book</strong></span></li>
+          </ol>
+          <p class="flow-foot">Name, dog, vaccines, waiver and membership are already on file, and the membership applies automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="demo">
+    <div class="wrap">
+      <div class="demo-head">
+        <div class="section-intro">
+          <div class="eyebrow">Try it</div>
+          <h2>A working demo</h2>
+          <p>Click around. It runs entirely in your browser: nothing is booked and nothing is charged.</p>
+        </div>
+        <div class="mode-switch" role="group" aria-label="Demo mode">
+          <button data-action="as-new" data-mode="new" aria-pressed="true">New member</button>
+          <button data-action="as-member" data-mode="member" aria-pressed="false">Returning member</button>
+        </div>
+      </div>
+      <div id="app" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="band" id="acuity">
+    <div class="wrap">
+      <div class="section-intro">
+        <div class="eyebrow">Good news</div>
+        <h2>Much of this may already be possible in Acuity</h2>
+        <p>No new software required. These are settings and features in Acuity Scheduling, which Summit already uses, that move booking a lot closer to the demo above.</p>
+      </div>
+      <div class="fixes">
+        <div class="fix">
+          <div class="fix-n">1</div>
+          <div>
+            <h3>Get members onto client accounts</h3>
+            <p>Acuity has built-in client accounts. A member who signs up once (the <strong>Sign up</strong> link at the top right of the scheduler) and stays logged in gets their name, phone and email filled in automatically, gets intake forms they've already completed filled in too, and can see their membership. The setting is <em>Scheduling Page → Settings → Booking behavior → Client log in &amp; registration</em>, and it's on by default, so this might mostly be a matter of telling members about it.</p>
+            <div class="meta"><span>Probably free to turn on</span><span>Biggest win</span><a href="https://help.acuityscheduling.com/hc/en-us/articles/16676924729997" target="_blank" rel="noopener">Acuity help: client accounts ↗</a></div>
+          </div>
+        </div>
+        <div class="fix">
+          <div class="fix-n">2</div>
+          <div>
+            <h3>Let members pick their membership instead of pasting a code</h3>
+            <p>Logged-in members can tap <strong>View Redeemable Codes</strong> at checkout and choose their subscription from a list. The <strong>Use Subscription</strong> button in the membership confirmation email also opens the scheduler with the code already applied. One tip: bookings made while logged out don't attach to the account automatically, but staff can link them with <em>Assign all to client user</em> on the client's page.</p>
+            <div class="meta"><span>Already available</span><a href="https://help.acuityscheduling.com/hc/en-us/articles/29268134579085" target="_blank" rel="noopener">Acuity help: redeeming codes ↗</a></div>
+          </div>
+        </div>
+        <div class="fix">
+          <div class="fix-n">3</div>
+          <div>
+            <h3>Ask about the dog once, not every class</h3>
+            <p>Acuity can't mark an intake question "ask only once." Its suggested approach is to put the full intake (dog details, vaccines, waiver) on the new-client or evaluation appointment, and keep the drop-in class form to a question or two. Logged-in members can skip forms they've already filled out.</p>
+            <div class="meta"><span>A quick form tweak</span><a href="https://help.acuityscheduling.com/hc/en-us/articles/16676931038093" target="_blank" rel="noopener">Acuity help: intake forms ↗</a></div>
+          </div>
+        </div>
+        <div class="fix">
+          <div class="fix-n">4</div>
+          <div>
+            <h3>Give each member a personal booking link</h3>
+            <p>Acuity's dynamic links can pre-fill the booking form and apply a code from the URL. A link like the one below opens straight to the group classes with the member's details and membership filled in. Members could bookmark it. Because it contains their contact info, it should go out in a private welcome email.</p>
+            <p style="margin-top:8px"><code>summitdogtraining.as.me/?appointmentType=category:Adventure%20Dog%20Club&amp;firstName=Sam&amp;lastName=Rivera&amp;email=sam@example.com&amp;certificate=MEMBERCODE</code></p>
+            <div class="meta"><span>Copy-and-paste once per member</span><a href="https://help.acuityscheduling.com/hc/en-us/articles/31919067234445" target="_blank" rel="noopener">Acuity help: dynamic link parameters ↗</a></div>
+          </div>
+        </div>
+        <div class="fix">
+          <div class="fix-n">5</div>
+          <div>
+            <h3>Check whether "Add another time" works for classes</h3>
+            <p>The <em>Add another time</em> booking setting lets clients choose several times in a single checkout, up to 24. Acuity's docs say recurring bookings aren't available from the classes layout, so this one is worth a quick test to see whether picking a few drop-in classes in one go works with Summit's setup.</p>
+            <div class="meta"><span>Worth a 5-minute test</span><a href="https://help.acuityscheduling.com/hc/en-us/articles/16676870087565" target="_blank" rel="noopener">Acuity help: booking multiple times ↗</a></div>
+          </div>
+        </div>
+        <div class="member-note card">
+          <h3>A one-line note for members</h3>
+          <p id="memberNote">“Tip: the next time you book a class, click <strong>Sign up</strong> at the top right of the scheduler to create an account. After that, your details fill in automatically, and you can choose your membership under <strong>View Redeemable Codes</strong> instead of typing the code.”</p>
+          <button class="btn btn-ghost btn-sm" data-action="copy-note">Copy text</button>
+        </div>
+        <p class="fine">Based on Acuity's help center as of October 2026. Feature names and menus change, so a quick test with a member account is worth doing first.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band-alt" id="how">
+    <div class="wrap">
+      <div class="section-intro">
+        <div class="eyebrow">Or, going further</div>
+        <h2>How a custom member page would work</h2>
+        <p>If Acuity's options ever fall short, the building blocks for a page like this demo are now off-the-shelf services with free tiers or pay-as-you-go pricing.</p>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <h3>Accounts</h3>
+          <p>Magic-link sign-in (type your email, click the link) through <strong>Supabase</strong> or <strong>Firebase Auth</strong>. Members' profiles and dogs are saved once and reused for every booking.</p>
+        </div>
+        <div class="stack-card">
+          <h3>Membership billing</h3>
+          <p><strong>Stripe Billing</strong> runs the $250 or $375 monthly subscription. Stripe Checkout hosts the card form, and the Stripe Customer Portal handles upgrades, card changes and cancellations.</p>
+        </div>
+        <div class="stack-card">
+          <h3>Booking</h3>
+          <p>A bookings table with the 6-dog cap enforced in the database. Monthly class credits reset with each billing cycle, kept in sync by a Stripe webhook.</p>
+        </div>
+        <div class="stack-card">
+          <h3>Hosting</h3>
+          <p>This page is static HTML on <strong>GitHub Pages</strong>, which is free. Confirmations and calendar invites go out through an email service such as Resend or Postmark.</p>
+        </div>
+      </div>
+      <details class="footnote">
+        <summary>A note for the Summit team</summary>
+        <p>This isn't meant as a criticism. Running your own booking system takes upkeep, and card fees are about the same either way, so the cheapest route is probably whatever your current tool can already do. The point is just that a smooth repeat-booking flow is much easier to get today than it used to be, and members who find booking easy tend to book more classes.</p>
+        <p>We love the classes. That's why we keep booking them. 🐾</p>
+      </details>
+    </div>
   </section>
 
   <footer class="footer">

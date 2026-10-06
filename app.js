@@ -154,6 +154,8 @@
 
   function render() {
     $('#resetBtn').hidden = !state.profile;
+    const member = !!(state.profile && state.dogs.length);
+    document.querySelectorAll('[data-mode]').forEach((btn) => btn.setAttribute('aria-pressed', String((btn.dataset.mode === 'member') === member)));
     if (!state.profile || !state.dogs.length) renderOnboarding();
     else renderDashboard();
     renderCart();
@@ -190,15 +192,19 @@
     app.innerHTML = `
       <section class="onboard">
         <div class="onboard-hero">
-          <div class="kicker">Adventure Dog Club</div>
-          <h1>Sign up once, then just pick classes.</h1>
-          <p class="lede">A little sketch of how a membership could work: your details are saved when you join, so booking a class is just choosing a time.</p>
+          <div class="kicker">Step 1 · New member</div>
+          <h2>Join once.</h2>
+          <p class="lede">This is the only form in the whole flow. After this, booking is just picking times.</p>
           <ul class="promise">
             <li><span class="ico">📝</span><div><strong>One sign-up.</strong> You, your dog and your membership, all in one place.</div></li>
             <li><span class="ico">✅</span><div><strong>Book several at once.</strong> Pick a week's worth of classes together.</div></li>
             <li><span class="ico">🎟️</span><div><strong>See where you're at.</strong> How many of this month's classes you've used.</div></li>
             <li><span class="ico">🐕‍🦺</span><div><strong>More than one dog?</strong> Add another to the same account.</div></li>
           </ul>
+          <div class="skip-card">
+            <div><strong>Short on time?</strong> Skip the form and see what a returning member sees.</div>
+            <button class="btn btn-sunset" data-action="as-member">See it as a member →</button>
+          </div>
         </div>
         <form class="card form" id="joinForm" novalidate>
           <fieldset>
@@ -251,11 +257,31 @@
           state.activeDog = dog.id;
           save();
           render();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollToDemo();
           toast(`Welcome to the club, ${firstName(state.profile.name)}!`);
         },
       });
     });
+  }
+
+  function seedMember() {
+    state = blank();
+    state.profile = { name: SAMPLE.name, email: SAMPLE.email, phone: SAMPLE.phone, joinedAt: Date.now() };
+    const dog = { id: uid(), ...SAMPLE.dog, emoji: DOG_EMOJI[0], tier: 'standard' };
+    state.dogs = [dog];
+    state.activeDog = dog.id;
+    schedule = buildSchedule();
+    const now = new Date();
+    schedule.filter((c) => c.start > now && eligible(dog, c) && !isFull(c)).filter((_, i) => i % 3 === 1).slice(0, 2)
+      .forEach((c) => state.bookings.push({ classId: c.id, dogId: dog.id, start: c.start.toISOString(), at: Date.now() }));
+    ui.selected.clear();
+    save();
+    render();
+  }
+
+  function scrollToDemo() {
+    const el = document.getElementById('demo');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function readDog(data) {
@@ -307,7 +333,7 @@
       <section class="dash">
         <div class="hello">
           <div class="card">
-            <h1>Hi ${esc(firstName(state.profile.name))}! 👋</h1>
+            <h2 class="hi">Hi ${esc(firstName(state.profile.name))}! 👋</h2>
             <p class="sub">Pick some classes below and you're all set.</p>
             <div class="dogs" role="group" aria-label="Choose dog">
               ${state.dogs.map((d) => `
@@ -623,6 +649,16 @@
     switch (el.dataset.action) {
       case 'home': e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
       case 'sample': fillSample(); break;
+      case 'as-member': e.preventDefault(); seedMember(); scrollToDemo(); toast(`Signed in as ${SAMPLE.name}, a member with ${SAMPLE.dog.name}.`); break;
+      case 'as-new': e.preventDefault(); state = blank(); ui.selected.clear(); save(); render(); scrollToDemo(); break;
+      case 'copy-note': {
+        const text = $('#memberNote').innerText.replace(/^[“"]|[”"]$/g, '');
+        const done = () => { el.textContent = 'Copied ✓'; setTimeout(() => { el.textContent = 'Copy text'; }, 2000); };
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => toast('Select the text and copy it manually.'));
+        else toast('Select the text and copy it manually.');
+        break;
+      }
+      case 'to-demo': e.preventDefault(); scrollToDemo(); break;
       case 'reset':
         if (confirm('Reset the demo? This clears the profile and bookings saved in this browser.')) {
           try { localStorage.removeItem(STORE_KEY); } catch (_) { /* ignore */ }
@@ -668,5 +704,6 @@
 
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
-  render();
+  if (location.hash === '#member' && !state.profile) seedMember();
+  else render();
 })();
