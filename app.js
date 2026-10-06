@@ -6,8 +6,6 @@
   const STORE_KEY = 'adc-demo-v1';
   const CLASS_CAP = 6;
   const STANDARD_LIMIT = 5;
-  const FIELDS_PER_BOOKING = 9; // name, email, phone, dog name/breed/age, membership code, waiver, notes
-  const MINUTES_PER_BOOKING = 3;
   const LOCATION = 'Summit Dog Training, 2906 E. Mulberry Street, Fort Collins, CO 80524';
 
   const TIERS = {
@@ -58,7 +56,7 @@
 
   /* ---------- state ---------- */
 
-  const blank = () => ({ profile: null, dogs: [], bookings: [], waitlist: [], stats: { booked: 0 }, activeDog: null });
+  const blank = () => ({ profile: null, dogs: [], bookings: [], waitlist: [], activeDog: null });
 
   function load() {
     try {
@@ -72,7 +70,7 @@
   }
 
   let state = load();
-  const ui = { week: 0, onlyEligible: true, selected: new Set(), firstPickAt: null, undo: null };
+  const ui = { week: 0, onlyEligible: true, selected: new Set(), undo: null };
 
   /* ---------- helpers ---------- */
 
@@ -193,13 +191,13 @@
       <section class="onboard">
         <div class="onboard-hero">
           <div class="kicker">Adventure Dog Club</div>
-          <h1>Type your info once. Then never again.</h1>
-          <p class="lede">Join the club in one form. After that, booking a class takes a tap: no re-entering your phone number, no digging for a membership code.</p>
+          <h1>Sign up once, then just pick classes.</h1>
+          <p class="lede">A little sketch of how a membership could work: your details are saved when you join, so booking a class is just choosing a time.</p>
           <ul class="promise">
-            <li><span class="ico">📝</span><div><strong>One form, one time.</strong> You, your dog, your membership.</div></li>
-            <li><span class="ico">✅</span><div><strong>Tick classes, tap book.</strong> Book a week or a month in one go.</div></li>
-            <li><span class="ico">🎟️</span><div><strong>Your credits, visible.</strong> See how many of your 5 classes you have left.</div></li>
-            <li><span class="ico">🐕‍🦺</span><div><strong>Two dogs?</strong> Add the second one without retyping yourself.</div></li>
+            <li><span class="ico">📝</span><div><strong>One sign-up.</strong> You, your dog and your membership, all in one place.</div></li>
+            <li><span class="ico">✅</span><div><strong>Book several at once.</strong> Pick a week's worth of classes together.</div></li>
+            <li><span class="ico">🎟️</span><div><strong>See where you're at.</strong> How many of this month's classes you've used.</div></li>
+            <li><span class="ico">🐕‍🦺</span><div><strong>More than one dog?</strong> Add another to the same account.</div></li>
           </ul>
         </div>
         <form class="card form" id="joinForm" novalidate>
@@ -254,7 +252,7 @@
           save();
           render();
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          toast(`Welcome to the club, ${firstName(state.profile.name)}! That's the last form you'll fill out.`);
+          toast(`Welcome to the club, ${firstName(state.profile.name)}!`);
         },
       });
     });
@@ -302,7 +300,6 @@
       .sort((a, b) => a.c.start - b.c.start);
     const nextForDog = upcoming.find((b) => b.dogId === dog.id);
 
-    const booked = state.stats.booked || 0;
     const visible = schedule.filter((c) => c.weekOffset === ui.week && c.start > now && (!ui.onlyEligible || eligible(dog, c)));
     const days = groupByDay(visible);
 
@@ -311,7 +308,7 @@
         <div class="hello">
           <div class="card">
             <h1>Hi ${esc(firstName(state.profile.name))}! 👋</h1>
-            <p class="sub">Everything's on file. Pick classes, tap book, go train.</p>
+            <p class="sub">Pick some classes below and you're all set.</p>
             <div class="dogs" role="group" aria-label="Choose dog">
               ${state.dogs.map((d) => `
                 <button class="dog-chip" data-action="dog" data-id="${d.id}" aria-pressed="${d.id === dog.id}">
@@ -332,12 +329,6 @@
               ? `Next up: <strong>${fmtShort(nextForDog.c.start)}, ${fmtTime(nextForDog.c.start)}</strong> · ${esc(nextForDog.c.theme)}`
               : 'Nothing booked yet. Pick something below 👇'}</div>
           </div>
-        </div>
-
-        <div class="stats">
-          <div class="stat"><div class="v">${booked}</div><div class="k">classes booked here</div></div>
-          <div class="stat highlight"><div class="v">${booked * FIELDS_PER_BOOKING}</div><div class="k">form fields you didn't retype</div></div>
-          <div class="stat"><div class="v">~${booked * MINUTES_PER_BOOKING} min</div><div class="k">of your life returned (est.)</div></div>
         </div>
 
         <div>
@@ -454,7 +445,7 @@
     cart.innerHTML = problem
       ? `<div class="c-text"><strong>${n} selected, but Standard covers ${problem.limit} a month</strong>${dog.name} has ${problem.used} booked in ${problem.month}. Remove ${problem.used + problem.n - problem.limit}, or go Unlimited.</div>
          <button class="btn btn-sunset" data-action="upgrade">Go Unlimited</button>`
-      : `<div class="c-text"><strong>${n} class${n > 1 ? 'es' : ''} for ${esc(dog.name)}</strong>No forms. No codes. Just tap.</div>
+      : `<div class="c-text"><strong>${n} class${n > 1 ? 'es' : ''} for ${esc(dog.name)}</strong>Your details are already saved.</div>
          <div class="c-btns"><button class="btn btn-ghost btn-sm" data-action="clear">Clear</button>
          <button class="btn btn-sunset" data-action="book">Book ${n} →</button></div>`;
   }
@@ -525,7 +516,7 @@
             state.activeDog = dog.id;
             ui.selected.clear();
             save(); render();
-            toast(`${dog.name} is in! You didn't retype a thing.`);
+            toast(`${dog.name} has been added.`);
           },
         });
       });
@@ -543,20 +534,16 @@
     });
     const added = ids.map((classId) => ({ classId, dogId: dog.id, start: byId(classId).start.toISOString(), at: Date.now() }));
     state.bookings.push(...added);
-    state.stats.booked = (state.stats.booked || 0) + added.length;
-    const elapsed = ui.firstPickAt ? (Date.now() - ui.firstPickAt) / 1000 : 0;
-    const secs = elapsed >= 0.5 ? elapsed.toFixed(1) : null;
-    ui.selected.clear(); ui.firstPickAt = null;
+    ui.selected.clear();
     ui.undo = added;
     save(); render();
-    toast(`Booked ${added.length} class${added.length === 1 ? '' : 'es'} for ${dog.name}${secs ? ` in ${secs} seconds` : ''}. Confirmation sent to ${state.profile.email} (well, it would be).`, true);
+    toast(`Booked ${added.length} class${added.length === 1 ? '' : 'es'} for ${dog.name}. A confirmation would go to ${state.profile.email}.`, true);
   }
 
   function undoLast() {
     if (!ui.undo) return;
     const undo = ui.undo;
     state.bookings = state.bookings.filter((b) => !undo.some((u) => u.classId === b.classId && u.dogId === b.dogId));
-    state.stats.booked = Math.max(0, (state.stats.booked || 0) - undo.length);
     ui.undo = null;
     save(); render();
     toast('Undone.');
@@ -586,7 +573,7 @@
     const dog = activeDog();
     openCheckout({
       tier: 'unlimited', dogName: dog.name, upgrade: true,
-      onPaid: () => { dog.tier = 'unlimited'; save(); render(); toast(`${dog.name} is Unlimited now. Book away.`); },
+      onPaid: () => { dog.tier = 'unlimited'; save(); render(); toast(`${dog.name} is on Unlimited now.`); },
     });
   }
 
@@ -646,7 +633,7 @@
       case 'add-dog': openAddDog(); break;
       case 'week': ui.week = Number(el.dataset.week); render(); break;
       case 'book': book(); break;
-      case 'clear': ui.selected.clear(); ui.firstPickAt = null; render(); break;
+      case 'clear': ui.selected.clear(); render(); break;
       case 'undo': $('#toast').hidden = true; undoLast(); break;
       case 'cancel': cancel(el.dataset.class, el.dataset.dog); break;
       case 'waitlist': toggleWaitlist(el.dataset.id); break;
@@ -668,7 +655,7 @@
   document.addEventListener('change', (e) => {
     const el = e.target;
     if (el.dataset.action === 'pick') {
-      if (el.checked) { ui.selected.add(el.dataset.id); ui.firstPickAt ??= Date.now(); }
+      if (el.checked) ui.selected.add(el.dataset.id);
       else ui.selected.delete(el.dataset.id);
       const y = window.scrollY;
       render();

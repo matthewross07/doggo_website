@@ -1,7 +1,7 @@
-# Adventure Dog Club — booking, but nice
+# Adventure Dog Club — a booking idea
 
-An unofficial, good-natured demo of what booking drop-in dog training classes could feel like:
-**enter your info once, then book any number of classes in one tap.**
+A friendly, unofficial demo of what booking drop-in dog training classes could feel like:
+save your details when you join, then book classes by just picking times.
 
 Live: https://matthewross07.github.io/doggo_website/
 
